@@ -26,16 +26,17 @@ sd() {
     fi
     ;;
   x-h | x--help)
-       echo "Usage: sd [command] <point_name>"
-       echo "Commands:"
-       echo "  sd add <point_name>    Adds the current working directory to your shift points"
-       echo "  sd rm <point_name>     Removes the named point from your shift points"
-       echo "  -h, --help             Prints this lovely message"
-       return 0
-       ;;
-  x-*) echo "Unknown option: '$1'"
-       return 1
-       ;;
+    echo "Usage: sd [command] <point_name>"
+    echo "Commands:"
+    echo "  sd add <point_name>    Adds the current working directory to your shift points"
+    echo "  sd rm <point_name>     Removes the named point from your shift points"
+    echo "  -h, --help             Prints this lovely message"
+    return 0
+    ;;
+  x-*)
+    echo "Unknown option: '$1'"
+    return 1
+    ;;
   esac
 
   local requested_link=$(readlink $sdd/$1)
