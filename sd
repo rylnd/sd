@@ -7,6 +7,7 @@ sd() {
   local point_name=$2
   local point_path=$sdd/$point_name
   local point_destination=$(readlink $point_path)
+  [[ -z "$point_destination" ]] && point_destination="no point destination"
 
   case "x$1" in
   xadd)
