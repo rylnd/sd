@@ -25,7 +25,7 @@ symlink_sd() {
   if [[ -e $HOME/.sd ]]; then
     echo "*** Skipping symlink, $HOME/.sd already exists ***"
   else
-    ln -s $repo_root/scripts/sd $HOME/.sd
+    ln -s $repo_root/sd $HOME/.sd
   fi
 }
 
