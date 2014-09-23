@@ -35,9 +35,12 @@ sd() {
   x-h | x--help)
     echo "Usage: sd [command] <point_name>"
     echo "Commands:"
-    echo "  sd add <point_name>    Adds the current working directory to your shift points"
-    echo "  sd rm <point_name>     Removes the named point from your shift points"
-    echo "  -h, --help             Prints this lovely message"
+    echo "  add <point_name>    Adds the current working directory to your shift points"
+    echo "  rm <point_name>     Removes the named point from your shift points"
+    echo "  ls                  Prints all shift points"
+    echo "  ls <point_name>     Prints all shift points matching the specified name"
+    echo "  -                   Shifts to previous working directory"
+    echo "  -h, --help          Prints this lovely message"
     return 0
     ;;
   x-)
