@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+
+# get the absolute path
+pushd $(dirname ${BASH_SOURCE[0]}/../) &> /dev/null
+repo_root=$(pwd -P)
+popd &> /dev/null
+
+usage() {
+  echo "
+Usage
+
+  setup/sd [action]
+
+Actions
+  install - One-time installation of sd
+  upgrade - Updates the repo, installs sd if necessary
+"
+}
+
+get_script() {
+  curl -s https://raw.github.com/rylnd/sd/master/sd > $HOME/.sd
+}
+
+symlink_sd() {
+  if [[ -e $HOME/.sd ]]; then
+    echo "*** Skipping symlink, $HOME/.sd already exists ***"
+  else
+    ln -s $repo_root/scripts/sd $HOME/.sd
+  fi
+}
+
+sd_hook() {
+  echo
+  echo '# define the sd function'
+  echo "source '$repo_root/sd'"
+}
+
+modify_dotfile() {
+  if ! grep -q "define the sd function" "$HOME/.bash_profile" ; then
+    sd_hook >> $HOME/.bash_profile
+  else
+    echo
+    echo "*** Skipping addition of sd hook. ***"
+    echo "Previous installation found in $HOME/.bash_profile"
+    echo "Please ensure something like the following is there:"
+    echo "--------------------------------------"
+    sd_hook
+    echo "--------------------------------------"
+  fi
+}
+
+setup_complete() {
+  echo
+  echo "*** sd is now set up! ***"
+  echo "Please source $HOME/.sd or start a new session to use sd"
+}
+
+while [[ $# > 0 ]]; do
+  arg="$1"
+  shift
+  case "x$arg" in
+    xinstall)
+      get_script && modify_dotfile && setup_complete
+      ;;
+    xupgrade)
+      pushd $repo_root &> /dev/null
+      symlink_sd && modify_dotfile && setup_complete
+      popd &> /dev/null
+      ;;
+    xusage)
+      usage
+      exit 0
+      ;;
+    *)
+      usage
+      exit 1
+      ;;
+  esac
+done

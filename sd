@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+sd() {
+  echo "$1"
+}
+
+_shift_directories() {
+  echo "test directories"
+}
+
+_sd_autocomplete() {
+  local current=${COMP_WORDS[COMP_CWORD]}
+
+  COMPREPLY=($(compgen -W "$(_shift_directories)" -- $current))
+}
+
+complete -F _sd_autocomplete sd
