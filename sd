@@ -1,7 +1,45 @@
 #!/usr/bin/env bash
 
 sd() {
-  echo "$1"
+  local sdd=$HOME/.sdd
+  local point_name=$2
+  local point_path=$sdd/$point_name
+  local point_link=$(readlink $point_path)
+
+  case "x$1" in
+  xadd)
+    if ln -s $PWD $point_path &> /dev/null; then
+      echo "Added shift point '$point_name' ($PWD)"
+      return 0
+    else
+      echo "Error adding shift point '$point_name' ($PWD)"
+      return 1
+    fi
+    ;;
+  xrm)
+    if rm $point_path &> /dev/null; then
+      echo "Removed shift point '$point_name' ($point_link)"
+      return 0
+    else
+      echo "Error removing shift point '$point_name' ($point_link)"
+      return 1
+    fi
+    ;;
+  x-h | x--help)
+       echo "Usage: sd [command] <point_name>"
+       echo "Commands:"
+       echo "  sd add <point_name>    Adds the current working directory to your shift points"
+       echo "  sd rm <point_name>     Removes the named point from your shift points"
+       echo "  -h, --help             Prints this lovely message"
+       return 0
+       ;;
+  x-*) echo "Unknown option: '$1'"
+       return 1
+       ;;
+  esac
+
+  local requested_link=$(readlink $sdd/$1)
+  cd $requested_link
 }
 
 _shift_directories() {
