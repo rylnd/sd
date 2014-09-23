@@ -23,5 +23,10 @@ describe "sd"
       shifted_pwd="$(sd test_point && pwd)"
       rm $HOME/.sdd/test_point
       assert equal "$shifted_pwd" "/tmp"
+
+    it "changes to the previous working directory"
+      expected_wd=$(pwd)
+      cd /tmp && sd - &> /dev/null
+      assert equal "$expected_wd" "$(pwd)"
   end_describe
 end_describe
