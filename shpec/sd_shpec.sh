@@ -15,8 +15,8 @@ describe "sd"
       assert file_absent $HOME/.sdd/test_point
   end_describe
 
-  describe "using a shift point"
-    it "changes you to that point"
+  describe "shifting to a point"
+    it "changes your working directory"
       cd /tmp
       sd add test_point &> /dev/null
       cd - &> /dev/null
