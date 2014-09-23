@@ -2,6 +2,8 @@
 
 sd() {
   local sdd=$HOME/.sdd
+  [[ -d $sdd ]] || mkdir $sdd
+
   local point_name=$2
   local point_path=$sdd/$point_name
   local point_link=$(readlink $point_path)
