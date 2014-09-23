@@ -2,5 +2,5 @@ language: c
 before_install:
   - sudo apt-get install curl
 before_script:
-  - sh -c "`curl -L https://raw.github.com/rylnd/shpec/master/install.sh`"
+  - sh -c "`curl -sL https://raw.github.com/rylnd/shpec/master/install.sh`"
 script: shpec
