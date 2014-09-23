@@ -2,6 +2,22 @@
 sd (shift directory) allows you to quickly change directories.
 It's [wd](https://github.com/mfaerevaag/wd) for bash.
 
+### Examples
+```bash
+# add a shift point
+cd /an/obnoxiously/long/path/that/i/often/use
+sd add obx
+
+# shift to that point
+sd obx
+
+# remove a shift point
+sd rm obx
+
+# list all shift points and their destinations
+sd ls
+```
+
 #### Setup (Recommended)
 First, pull down the repo:
 ```bash
