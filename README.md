@@ -17,7 +17,7 @@ setup/sd upgrade
 #### Setup (Automatic)
 For a one-off install, simply paste the following into your command line:
 ```bash
-curl -s https://raw.github.com/rylnd/sd/master/setup/sd | bash -s install
+curl -sL https://raw.github.com/rylnd/sd/master/setup/sd | bash -s install
 ```
 
 #### Setup (Manual)
