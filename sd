@@ -5,7 +5,10 @@ sd() {
 }
 
 _shift_directories() {
-  echo "test directories"
+  local sdd=$HOME/.sdd
+  [[ -d $sdd ]] || mkdir $sdd
+
+  ls $sdd
 }
 
 _sd_autocomplete() {
