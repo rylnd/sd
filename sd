@@ -67,7 +67,7 @@ sd() {
   return $?
 }
 
-_shift_directories() {
+_shift_points() {
   local sdd=$HOME/.sdd
   [[ -d $sdd ]] || mkdir $sdd
 
@@ -77,7 +77,7 @@ _shift_directories() {
 _sd_autocomplete() {
   local current=${COMP_WORDS[COMP_CWORD]}
 
-  COMPREPLY=($(compgen -W "$(_shift_directories)" -- $current))
+  COMPREPLY=($(compgen -W "$(_shift_points)" -- $current))
 }
 
 complete -F _sd_autocomplete sd
