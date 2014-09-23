@@ -6,7 +6,7 @@ sd() {
 
   local point_name=$2
   local point_path=$sdd/$point_name
-  local point_link=$(readlink $point_path)
+  local point_destination=$(readlink $point_path)
 
   case "x$1" in
   xadd)
@@ -20,10 +20,10 @@ sd() {
     ;;
   xrm)
     if rm $point_path &> /dev/null; then
-      echo "Removed shift point '$point_name' ($point_link)"
+      echo "Removed shift point '$point_name' ($point_destination)"
       return 0
     else
-      echo "Error removing shift point '$point_name' ($point_link)"
+      echo "Error removing shift point '$point_name' ($point_destination)"
       return 1
     fi
     ;;
