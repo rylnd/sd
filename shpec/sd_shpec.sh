@@ -19,7 +19,7 @@ describe "sd"
     it "changes you to that point"
       cd /tmp
       sd add test_point &> /dev/null
-      cd -
+      cd - &> /dev/null
       shifted_pwd="$(sd test_point && pwd)"
       rm $HOME/.sdd/test_point
       assert equal "$shifted_pwd" "/tmp"
