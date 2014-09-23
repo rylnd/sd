@@ -33,6 +33,10 @@ sd() {
     echo "  -h, --help             Prints this lovely message"
     return 0
     ;;
+  x-)
+    cd -
+    return $?
+    ;;
   x-*)
     echo "Unknown option: '$1'"
     return 1
