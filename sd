@@ -27,6 +27,11 @@ sd() {
       return 1
     fi
     ;;
+  xls)
+    local point_list=$(ls -l $sdd | grep -v '^total' | awk '{printf "%s\t%s\n", $9, $11}')
+    echo "$point_list" | grep "$2"
+    return 0
+    ;;
   x-h | x--help)
     echo "Usage: sd [command] <point_name>"
     echo "Commands:"
