@@ -41,6 +41,7 @@ sd() {
 
   local requested_link=$(readlink $sdd/$1)
   cd $requested_link
+  return $?
 }
 
 _shift_directories() {
