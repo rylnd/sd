@@ -6,14 +6,16 @@ describe "sd"
       sd add test_point &> /dev/null
       assert file_present $HOME/.sdd/test_point
       rm $HOME/.sdd/test_point
-  end_describe
+    end
+  end
 
   describe "removing a shift point"
     it "removes a symlink"
       sd add test_point &> /dev/null
       sd rm test_point &> /dev/null
       assert file_absent $HOME/.sdd/test_point
-  end_describe
+    end
+  end
 
   describe "shifting to a point"
     it "changes your working directory"
@@ -23,10 +25,12 @@ describe "sd"
       shifted_pwd="$(sd test_point && pwd)"
       rm $HOME/.sdd/test_point
       assert equal "$shifted_pwd" "/tmp"
+    end
 
     it "changes to the previous working directory"
       expected_wd=$(pwd)
       cd /tmp && sd - &> /dev/null
       assert equal "$expected_wd" "$(pwd)"
-  end_describe
-end_describe
+    end
+  end
+end
