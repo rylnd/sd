@@ -33,7 +33,7 @@ sd() {
     echo "$point_list" | grep "$2"
     return 0
     ;;
-  x-h | x--help)
+  x-h | x--help | x)
     echo "Usage: sd [command] <point_name>"
     echo "Commands:"
     echo "  add <point_name>    Adds the current working directory to your shift points"
