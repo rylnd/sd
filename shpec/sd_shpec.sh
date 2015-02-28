@@ -1,11 +1,23 @@
 source $SHPEC_ROOT/../sd
 
 describe "sd"
+  sdd="$HOME/.sdd"
   describe "adding a shift point"
     it "creates a symlink"
       sd add test_point &> /dev/null
-      assert file_present $HOME/.sdd/test_point
-      rm $HOME/.sdd/test_point
+      assert file_present "$sdd/test_point"
+      rm "$sdd/test_point"
+    end
+
+    it "handles paths with spaces"
+      path_with_spaces="$TMPDIR/file with spaces/"
+      mkdir -p "$path_with_spaces" && cd "$path_with_spaces"
+      sd add spaces &> /dev/null
+      saved_point="$(sd spaces && pwd)"
+      rm "$sdd/spaces"
+      rmdir "$path_with_spaces"
+
+      assert equal "$saved_point" "$(pwd)"
     end
   end
 
@@ -23,7 +35,8 @@ describe "sd"
       sd add test_point &> /dev/null
       cd - &> /dev/null
       shifted_pwd="$(sd test_point && pwd)"
-      rm $HOME/.sdd/test_point
+      rm "$sdd/test_point"
+
       assert equal "$shifted_pwd" "/tmp"
     end
 
@@ -31,6 +44,18 @@ describe "sd"
       expected_wd=$(pwd)
       cd /tmp && sd - &> /dev/null
       assert equal "$expected_wd" "$(pwd)"
+    end
+  end
+
+  describe "listing your shift points"
+    it "lists points with spaces"
+      path_with_spaces="$TMPDIR/file with spaces/"
+      mkdir -p "$path_with_spaces" && cd "$path_with_spaces"
+      sd add spaces &> /dev/null
+
+      assert match "$(sd ls | grep spaces)" "file\ with\ spaces"
+      rm "$sdd/spaces"
+      rmdir "$path_with_spaces"
     end
   end
 end
