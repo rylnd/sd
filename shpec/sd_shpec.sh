@@ -25,6 +25,8 @@ describe "sd"
     it "removes a symlink"
       sd add test_point &> /dev/null
       sd rm test_point &> /dev/null
+      rm "$sdd/test_point" &> /dev/null
+
       assert file_absent $HOME/.sdd/test_point
     end
   end
