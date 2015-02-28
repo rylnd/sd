@@ -10,7 +10,7 @@ describe "sd"
     end
 
     it "handles paths with spaces"
-      path_with_spaces="$TMPDIR/file with spaces/"
+      path_with_spaces="/tmp/file with spaces/"
       mkdir -p "$path_with_spaces" && cd "$path_with_spaces"
       sd add spaces &> /dev/null
       saved_point="$(sd spaces && pwd)"
@@ -51,7 +51,7 @@ describe "sd"
 
   describe "listing your shift points"
     it "lists points with spaces"
-      path_with_spaces="$TMPDIR/file with spaces/"
+      path_with_spaces="/tmp/file with spaces/"
       mkdir -p "$path_with_spaces" && cd "$path_with_spaces"
       sd add spaces &> /dev/null
 
