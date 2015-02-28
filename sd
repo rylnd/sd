@@ -57,7 +57,7 @@ sd() {
   # if we get here, we're shifting
   local requested_point="$1"
   point_path="$sdd/$requested_point"
-  if [[ ! -e "$point_path" ]]; then
+  if [[ ! -L "$point_path" ]]; then
     echo "Can't shift to point '$requested_point,' it doesn't exist."
     return 1
   fi
