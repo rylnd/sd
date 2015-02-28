@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 
 sd() {
-  local sdd=$HOME/.sdd
-  [[ -d $sdd ]] || mkdir $sdd
+  local sdd="$HOME/.sdd"
+  [[ -d "$sdd" ]] || mkdir "$sdd"
 
-  local point_name=$2
-  local point_path=$sdd/$point_name
-  local point_destination=$(readlink $point_path)
+  local point_name="$2"
+  local point_path="$sdd/$point_name"
+  local point_destination="$(readlink $point_path)"
   [[ -z "$point_destination" ]] && point_destination="no point destination"
 
   case "x$1" in
   xadd)
-    if ln -s $PWD $point_path &> /dev/null; then
+    if ln -s "$PWD" "$point_path" &> /dev/null; then
       echo "Added shift point '$point_name' ($PWD)"
       return 0
     else
@@ -20,7 +20,7 @@ sd() {
     fi
     ;;
   xrm)
-    if rm $point_path &> /dev/null; then
+    if rm "$point_path" &> /dev/null; then
       echo "Removed shift point '$point_name' ($point_destination)"
       return 0
     else
@@ -29,7 +29,7 @@ sd() {
     fi
     ;;
   xls)
-    local point_list=$(ls -l $sdd | grep -v '^total' | awk '{printf "\033[95m%10s\033[0m  \033[92m%s\033[0m\n", $9, $11}')
+    local point_list=$(ls -l "$sdd" | grep -v '^total' | grep -Eo '\b\w+\b ->.*' | awk -F' -> ' '{printf "\033[95m%14s\033[0m \033[92m%s\033[0m\n", $1, $2}')
     echo "$point_list" | grep "$2"
     return 0
     ;;
@@ -55,27 +55,27 @@ sd() {
   esac
 
   # if we get here, we're shifting
-  local requested_point=$1
-  point_path=$sdd/$requested_point
-  if [[ ! -e $point_path ]]; then
+  local requested_point="$1"
+  point_path="$sdd/$requested_point"
+  if [[ ! -e "$point_path" ]]; then
     echo "Can't shift to point '$requested_point,' it doesn't exist."
     return 1
   fi
 
-  local requested_destination=$(readlink $point_path)
-  cd $requested_destination
+  local requested_destination="$(readlink $point_path)"
+  cd "$requested_destination"
   return $?
 }
 
 _shift_points() {
-  local sdd=$HOME/.sdd
-  [[ -d $sdd ]] || mkdir $sdd
+  local sdd="$HOME/.sdd"
+  [[ -d "$sdd" ]] || mkdir "$sdd"
 
-  ls $sdd
+  ls "$sdd"
 }
 
 _sd_autocomplete() {
-  local current=${COMP_WORDS[COMP_CWORD]}
+  local current="${COMP_WORDS[COMP_CWORD]}"
 
   COMPREPLY=($(compgen -W "$(_shift_points)" -- $current))
 }
