@@ -21,6 +21,16 @@ _path_without_point() {
   fi
 }
 
+_leading_folders_from_path() {
+  if [[ "$1" =~ "/" ]]; then
+    echo "$1" | rev | cut -d/ -f2- | rev | sed 's|$|/|'
+  fi
+}
+
+_path_without_leading_folders() {
+  echo "$1" | rev | cut -d/ -f1 | rev
+}
+
 _point_destination() {
   local sdd="$(_sdd)"
   local point="$1"
@@ -32,11 +42,13 @@ _sd_autocomplete() {
   local current="${COMP_WORDS[COMP_CWORD]}"
 
   if [[ "$current" =~ "/" ]]; then
-    local subpath="$(_path_without_point "$current")"
     local point="$(_point_from_path "$current")"
+    local subpath="$(_path_without_point "$current")"
     local destination="$(_point_destination "$point")"
+    local subfolders="$(_leading_folders_from_path "$subpath")"
+    current="$(_path_without_leading_folders "$subpath")"
 
-    COMPREPLY=($(compgen -W "$(ls "$destination")" -P "$point/" -- $subpath))
+    COMPREPLY=($(compgen -W "$(ls "$destination/$subfolders")" -P "$point/$subfolders" -- $current))
   else
     COMPREPLY=($(compgen -W "$(_shift_points)" -- $current))
   fi
