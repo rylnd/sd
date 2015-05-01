@@ -1,8 +1,49 @@
 #!/usr/bin/env bash
 
-sd() {
+_sdd() {
   local sdd="$HOME/.sdd"
   [[ -d "$sdd" ]] || mkdir "$sdd"
+
+  echo "$sdd"
+}
+
+_shift_points() {
+  ls "$(_sdd)"
+}
+
+_requested_point() {
+  echo "$1" | cut -d/ -f1
+}
+
+_requested_subpath() {
+  if [[ "$1" =~ "/" ]]; then
+    echo "$1" | cut -d/ -f2-
+  fi
+}
+
+_point_destination() {
+  local sdd="$(_sdd)"
+  local point="$1"
+
+  echo "$(readlink $sdd/$point)"
+}
+
+_sd_autocomplete() {
+  local current="${COMP_WORDS[COMP_CWORD]}"
+
+  if [[ "$current" =~ "/" ]]; then
+    local subpath="$(_requested_subpath "$current")"
+    local point="$(_requested_point "$current")"
+    local destination="$(_point_destination "$point")"
+
+    COMPREPLY=($(compgen -W "$(ls "$destination")" -P "$point/" -- $subpath))
+  else
+    COMPREPLY=($(compgen -W "$(_shift_points)" -- $current))
+  fi
+}
+
+sd() {
+  local sdd="$(_sdd)"
 
   local point_name="$2"
   local point_path="$sdd/$point_name"
@@ -55,12 +96,8 @@ sd() {
   esac
 
   # if we get here, we're shifting
-  local requested_point="$1"
-
-  if [[ "$requested_point" =~ "/" ]]; then
-    local subpath="$(echo "$requested_point" | cut -d/ -f2-)"
-    requested_point="$(echo "$requested_point" | cut -d/ -f1)"
-  fi
+  local requested_point="$(_requested_point "$1")"
+  local subpath="$(_requested_subpath "$1")"
 
   point_path="$sdd/$requested_point"
 
@@ -69,27 +106,10 @@ sd() {
     return 1
   fi
 
-  local requested_destination="$(readlink $point_path)"
-
-  if [[ -n "$subpath" ]]; then
-    requested_destination="$requested_destination/$subpath"
-  fi
+  local requested_destination="$(readlink $point_path)/$subpath"
 
   cd "$requested_destination"
   return $?
-}
-
-_shift_points() {
-  local sdd="$HOME/.sdd"
-  [[ -d "$sdd" ]] || mkdir "$sdd"
-
-  ls "$sdd"
-}
-
-_sd_autocomplete() {
-  local current="${COMP_WORDS[COMP_CWORD]}"
-
-  COMPREPLY=($(compgen -W "$(_shift_points)" -- $current))
 }
 
 complete -F _sd_autocomplete sd
