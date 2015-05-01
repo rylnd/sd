@@ -56,13 +56,25 @@ sd() {
 
   # if we get here, we're shifting
   local requested_point="$1"
+
+  if [[ "$requested_point" =~ "/" ]]; then
+    local subpath="$(echo "$requested_point" | cut -d/ -f2-)"
+    requested_point="$(echo "$requested_point" | cut -d/ -f1)"
+  fi
+
   point_path="$sdd/$requested_point"
+
   if [[ ! -L "$point_path" ]]; then
     echo "Can't shift to point '$requested_point' because it doesn't exist."
     return 1
   fi
 
   local requested_destination="$(readlink $point_path)"
+
+  if [[ -n "$subpath" ]]; then
+    requested_destination="$requested_destination/$subpath"
+  fi
+
   cd "$requested_destination"
   return $?
 }

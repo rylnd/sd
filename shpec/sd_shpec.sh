@@ -47,6 +47,19 @@ describe "sd"
       cd /tmp && sd - &> /dev/null
       assert equal "$expected_wd" "$(pwd)"
     end
+
+    it "allows subfolders"
+      cd /tmp
+      mkdir subfolder
+      sd add test_point &> /dev/null
+      cd - &> /dev/null
+
+      shifted_pwd="$(sd test_point/subfolder && pwd)"
+      rm "$sdd/test_point"
+
+      assert equal "$shifted_pwd" "/tmp/subfolder"
+      cd
+    end
   end
 
   describe "listing your shift points"
