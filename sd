@@ -11,11 +11,11 @@ _shift_points() {
   ls "$(_sdd)"
 }
 
-_requested_point() {
+_point_from_path() {
   echo "$1" | cut -d/ -f1
 }
 
-_requested_subpath() {
+_path_without_point() {
   if [[ "$1" =~ "/" ]]; then
     echo "$1" | cut -d/ -f2-
   fi
@@ -32,8 +32,8 @@ _sd_autocomplete() {
   local current="${COMP_WORDS[COMP_CWORD]}"
 
   if [[ "$current" =~ "/" ]]; then
-    local subpath="$(_requested_subpath "$current")"
-    local point="$(_requested_point "$current")"
+    local subpath="$(_path_without_point "$current")"
+    local point="$(_point_from_path "$current")"
     local destination="$(_point_destination "$point")"
 
     COMPREPLY=($(compgen -W "$(ls "$destination")" -P "$point/" -- $subpath))
@@ -96,8 +96,8 @@ sd() {
   esac
 
   # if we get here, we're shifting
-  local requested_point="$(_requested_point "$1")"
-  local subpath="$(_requested_subpath "$1")"
+  local requested_point="$(_point_from_path "$1")"
+  local subpath="$(_path_without_point "$1")"
 
   point_path="$sdd/$requested_point"
 
