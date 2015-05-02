@@ -1,8 +1,61 @@
 #!/usr/bin/env bash
 
-sd() {
+_sdd() {
   local sdd="$HOME/.sdd"
   [[ -d "$sdd" ]] || mkdir "$sdd"
+
+  echo "$sdd"
+}
+
+_shift_points() {
+  ls "$(_sdd)"
+}
+
+_point_from_path() {
+  echo "$1" | cut -d/ -f1
+}
+
+_path_without_point() {
+  if [[ "$1" =~ "/" ]]; then
+    echo "$1" | cut -d/ -f2-
+  fi
+}
+
+_leading_folders_from_path() {
+  if [[ "$1" =~ "/" ]]; then
+    echo "$1" | rev | cut -d/ -f2- | rev | sed 's|$|/|'
+  fi
+}
+
+_path_without_leading_folders() {
+  echo "$1" | rev | cut -d/ -f1 | rev
+}
+
+_point_destination() {
+  local sdd="$(_sdd)"
+  local point="$1"
+
+  echo "$(readlink $sdd/$point)"
+}
+
+_sd_autocomplete() {
+  local current="${COMP_WORDS[COMP_CWORD]}"
+
+  if [[ "$current" =~ "/" ]]; then
+    local point="$(_point_from_path "$current")"
+    local subpath="$(_path_without_point "$current")"
+    local destination="$(_point_destination "$point")"
+    local subfolders="$(_leading_folders_from_path "$subpath")"
+    current="$(_path_without_leading_folders "$subpath")"
+
+    COMPREPLY=($(compgen -W "$(ls -F "$destination/$subfolders")" -P "$point/$subfolders" -- $current))
+  else
+    COMPREPLY=($(compgen -W "$(_shift_points)" -- $current))
+  fi
+}
+
+sd() {
+  local sdd="$(_sdd)"
 
   local point_name="$2"
   local point_path="$sdd/$point_name"
@@ -55,29 +108,20 @@ sd() {
   esac
 
   # if we get here, we're shifting
-  local requested_point="$1"
+  local requested_point="$(_point_from_path "$1")"
+  local subpath="$(_path_without_point "$1")"
+
   point_path="$sdd/$requested_point"
+
   if [[ ! -L "$point_path" ]]; then
     echo "Can't shift to point '$requested_point' because it doesn't exist."
     return 1
   fi
 
-  local requested_destination="$(readlink $point_path)"
+  local requested_destination="$(readlink $point_path)/$subpath"
+
   cd "$requested_destination"
   return $?
-}
-
-_shift_points() {
-  local sdd="$HOME/.sdd"
-  [[ -d "$sdd" ]] || mkdir "$sdd"
-
-  ls "$sdd"
-}
-
-_sd_autocomplete() {
-  local current="${COMP_WORDS[COMP_CWORD]}"
-
-  COMPREPLY=($(compgen -W "$(_shift_points)" -- $current))
 }
 
 complete -F _sd_autocomplete sd
