@@ -11,6 +11,9 @@ sd add obx
 # shift to that point
 sd obx
 
+# shift to a subfolder of that point
+sd obx/subfolder/of/common/point
+
 # remove a shift point
 sd rm obx
 
