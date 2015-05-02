@@ -53,13 +53,12 @@ describe "sd"
       mkdir subfolder
       sd add test_point &> /dev/null
       cd - &> /dev/null
-
       shifted_pwd="$(sd test_point/subfolder && pwd)"
-      rm "$sdd/test_point"
-      rmdir /tmp/subfolder
 
       assert equal "$shifted_pwd" "/tmp/subfolder"
-      cd
+
+      rm "$sdd/test_point"
+      rmdir /tmp/subfolder
     end
   end
 
