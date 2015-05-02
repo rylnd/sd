@@ -56,6 +56,7 @@ describe "sd"
 
       shifted_pwd="$(sd test_point/subfolder && pwd)"
       rm "$sdd/test_point"
+      rmdir /tmp/subfolder
 
       assert equal "$shifted_pwd" "/tmp/subfolder"
       cd
