@@ -1,7 +1,7 @@
 source $SHPEC_ROOT/../sd
 
 describe "sd"
-  sdd="$HOME/.sdd"
+  sdd="$(_sdd)"
   describe "adding a shift point"
     it "creates a symlink"
       sd add test_point &> /dev/null
