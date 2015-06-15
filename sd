@@ -46,9 +46,10 @@ _sd_autocomplete() {
     local subpath="$(_path_without_point "$current")"
     local destination="$(_point_destination "$point")"
     local subfolders="$(_leading_folders_from_path "$subpath")"
+    local completions="$(ls -F "$destination/$subfolders" | sed 's|@$||')"
     current="$(_path_without_leading_folders "$subpath")"
 
-    COMPREPLY=($(compgen -W "$(ls -F "$destination/$subfolders")" -P "$point/$subfolders" -- $current))
+    COMPREPLY=($(compgen -W "$completions" -P "$point/$subfolders" -- $current))
   else
     COMPREPLY=($(compgen -W "$(_shift_points)" -- $current))
   fi
