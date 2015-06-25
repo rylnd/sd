@@ -125,4 +125,4 @@ sd() {
   return $?
 }
 
-complete -F _sd_autocomplete sd
+complete -o nospace -F _sd_autocomplete sd
