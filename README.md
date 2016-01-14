@@ -33,6 +33,10 @@ cd sd
 setup/sd upgrade
 ```
 
+_Note_: both the `install` and `upgrade` commands accept an optional 'dotfile'
+argument that overrides where sd is pulled into the environment (defaults to
+$HOME/.bash_profile).
+
 #### Setup (Automatic)
 For a one-off install, simply paste the following into your command line:
 ```bash
