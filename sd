@@ -115,22 +115,17 @@ sd() {
   point_path="$sdd/$requested_point"
 
   if [[ ! -L "$point_path" ]]; then
-    if [ -z "$SD_USE_FZF" ]; then
-        echo "Can't shift to point '$requested_point' because it doesn't exist."
+
+    type fzf >/dev/null 2>&1 || {
+    echo  "Can't shift to point '$requested_point' because it doesn't exist."
+    return 1
+    }
+    point_path="$sdd/$(find "$sdd" -maxdepth 1 -type l  -exec basename "{}" \; |fzf -q "$*")"
+    if [ "$?" -ne "0" ] ; then
         return 1
-    else
-        type fzf >/dev/null 2>&1 || {
-        echo  "Can't shift to point '$requested_point' because it doesn't exist."
-        echo  "Also fzf should be used instead, but fzf can't be found."
-        return 1
-        }
-        point_path="$sdd/$(find "$sdd" -maxdepth 1 -type l -printf "%f\n"|fzf -q "$*")"
     fi
-
   fi
-
   local requested_destination="$(readlink $point_path)/$subpath"
-
   cd "$requested_destination"
   return $?
 }

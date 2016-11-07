@@ -80,4 +80,29 @@ describe "sd"
       rmdir "$path_with_spaces"
     end
   end
+  describe "using fzf"
+    it "should use fzf if availible"
+      cd /tmp
+      sd add __TEMP &> /dev/null
+      stub_command "fzf" "echo __TEMP"
+      cd /
+      shifted_pwd="$(sd tmp && pwd)"
+      assert equal "$shifted_pwd" "/tmp"
+      rm "$sdd/__TEMP"
+    end
+
+    it "should pass all arguments to fzf as a search query"
+      stub_command "fzf" 'echo "$*" > /tmp/fzfargs'
+      sd foobar
+      assert equal "-q foobar" "$(cat /tmp/fzfargs)"
+      rm /tmp/fzfargs
+    end
+
+    it "shouldn't do anything if fzf returns non-zero"
+      stub_command "fzf" "return 130"
+      cd /tmp
+      sd nonexistent
+      assert equal "$(pwd)" "/tmp"
+    end
+  end
 end
