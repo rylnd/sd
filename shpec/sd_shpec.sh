@@ -21,6 +21,7 @@ describe "sd"
 
       rm "$sdd/spaces"
       rmdir "$path_with_spaces"
+      cd - &> /dev/null
     end
   end
 
@@ -73,6 +74,7 @@ describe "sd"
       path_with_spaces="/tmp/file with spaces/"
       mkdir -p "$path_with_spaces" && cd "$path_with_spaces"
       sd add spaces &> /dev/null
+      cd - &> /dev/null
 
       assert grep "$(sd ls | grep spaces)" "file with spaces"
 
