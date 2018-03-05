@@ -74,7 +74,7 @@ describe "sd"
       mkdir -p "$path_with_spaces" && cd "$path_with_spaces"
       sd add spaces &> /dev/null
 
-      assert match "$(sd ls | grep spaces)" "file\ with\ spaces"
+      assert grep "$(sd ls | grep spaces)" "file with spaces"
 
       rm "$sdd/spaces"
       rmdir "$path_with_spaces"
