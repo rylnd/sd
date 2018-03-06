@@ -81,5 +81,17 @@ describe "sd"
       rm "$sdd/spaces"
       rmdir "$path_with_spaces"
     end
+
+    it "works when ls is aliased"
+      sd add foo
+      shopt -s expand_aliases
+      alias ls="ls -F"
+
+      assert present "$(sd ls | grep foo)"
+
+      unalias ls
+      shopt -u expand_aliases
+      rm "$sdd/foo"
+    end
   end
 end
