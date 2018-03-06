@@ -36,12 +36,14 @@ sd_hook() {
 }
 
 modify_dotfile() {
-  if ! grep -q "define the sd function" "$HOME/.bash_profile" ; then
-    sd_hook >> $HOME/.bash_profile
+  local dotfile="${1:-$HOME/.bash_profile}"
+
+  if ! grep -q "define the sd function" "$dotfile" ; then
+    sd_hook >> "$dotfile"
   else
     echo
     echo "*** Skipping addition of sd hook. ***"
-    echo "Previous installation found in $HOME/.bash_profile"
+    echo "Previous installation found in $dotfile"
     echo "Please ensure something like the following is there:"
     echo "--------------------------------------"
     sd_hook
@@ -60,11 +62,15 @@ while [[ $# > 0 ]]; do
   shift
   case "x$arg" in
     xinstall)
-      get_script && modify_dotfile && setup_complete
+      dotfile="$1"
+      shift
+      get_script && modify_dotfile "$dotfile" && setup_complete
       ;;
     xupgrade)
+      dotfile="$1"
+      shift
       pushd $repo_root &> /dev/null
-      symlink_sd && modify_dotfile && setup_complete
+      symlink_sd && modify_dotfile "$dotfile" && setup_complete
       popd &> /dev/null
       ;;
     xusage)
