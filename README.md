@@ -46,5 +46,21 @@ Define the sd script in your shell by adding the following to a shell startup fi
 source "<PATH_TO_SD_SCRIPT>"
 ```
 
+#### Fuzzy finding
+If [fzf](https://github.com/junegunn/fzf) is in `$PATH` shifting to a non matching point will bring fzf up with a list of all points, pre filtered with your non matching point. 
+
+After:
+```bash
+sd add foo
+sd add bar
+sd add baz
+
+sd ba
+```
+you will face fzf prompting yout to choose between baz and bar
+
+
+
+
 # Contributing
 Pull requests are always welcome.
